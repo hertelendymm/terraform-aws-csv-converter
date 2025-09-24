@@ -22,6 +22,6 @@
 - **Core AWS Services**:
     - AWS Lambda (Serverless Compute)
     - Amazon S3 Object Storage (with event triggers)
-    - ~ API Gateway (for the Live Demo) ~ Maybe later with an extra step: Add token authorization to the API Gateway.
+    - ~API Gateway (for the Live Demo)~ Maybe later with an extra step: Add token authorization to the API Gateway.
     - AWS IAM (Identity and Access Management)
     - Amazon CloudWatch (Logging and Monitoring)
