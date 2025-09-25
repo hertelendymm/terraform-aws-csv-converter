@@ -1,5 +1,6 @@
+# This uses the S3 bucket and DynamoDB table I ALREADY created in the foundation stage (with /terraform/foundation/ terraform files)
+
 terraform {
-    # This uses the S3 bucket and DynamoDB table I ALREADY created in the foundation stage (with /terraform/foundation/ terraform files)
     backend "s3" {
         bucket = "csv2json-tfstate-mz1gpchf"
         key    = "csv2json/terraform.tfstate"
