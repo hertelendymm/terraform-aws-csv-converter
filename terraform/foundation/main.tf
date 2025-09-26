@@ -1,6 +1,3 @@
-# This configuration creates the founadtional resources for the Terraform remote state
-# It should be aplied MANUALLY ONE TIME. So, the main pipeline can access and use the created AWS resources for the rest of the project.
-
 resource "random_string" "suffix" {
     length  = 8
     special = false
