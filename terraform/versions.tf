@@ -2,10 +2,7 @@
 
 terraform {
     backend "s3" {
-        bucket = "csv2json-tfstate-mz1gpchf"
-        key    = "csv2json/terraform.tfstate"
-        region ="eu-west-2"
-        dynamodb_table = "csv2json-terraform-locks"
+        # Configuration will be provided via the init command
     }
 
     required_providers {
