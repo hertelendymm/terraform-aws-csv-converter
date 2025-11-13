@@ -40,11 +40,6 @@ resource "aws_iam_policy" "lambda_policy" {
             Effect   = "Allow",
             Resource = "arn:aws:logs:*:*:*"
         },
-        # {
-        #     Action   = "s3:GetObject",
-        #     Effect   = "Allow",
-        #     Resource = "${aws_s3_bucket.source_bucket.arn}/*"
-        # },
         {
             Action   = ["s3:GetObject", "s3:HeadObject"],
             Effect   = "Allow",
@@ -100,4 +95,24 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
     }
 
     depends_on = [aws_lambda_permission.allow_s3_to_invoke_lambda]
+}
+
+resource "aws_s3_bucket_cors_configuration" "source_bucket_cors" {
+    bucket = aws_s3_bucket.source_bucket.id
+
+    cors_rule {
+        allowed_headers = ["*"]
+        allowed_methods = ["PUT", "POST", "HEAD"]
+        allowed_origins = ["*"] 
+    }
+}
+
+resource "aws_s3_bucket_cors_configuration" "destination_bucket_cors" {
+    bucket = aws_s3_bucket.destination_bucket.id
+
+    cors_rule {
+        allowed_headers = ["*"]
+        allowed_methods = ["GET", "HEAD"]
+        allowed_origins = ["*"] 
+    }
 }
