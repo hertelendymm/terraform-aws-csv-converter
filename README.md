@@ -11,6 +11,7 @@ Live Demo Here: [link](http://csv2json-hosting-ax4zfwlp.s3-website.eu-central-1.
 The application is built on a decoupled, three-tier serverless architecture on AWS, ensuring high availability, scalability, and security.
 
 # Project File Structure
+```
 .
 ├── .github/
 │   └── workflows/
@@ -46,6 +47,7 @@ The application is built on a decoupled, three-tier serverless architecture on A
 │   └── deploy_frontend.sh        # Script to build Flutter and sync assets to S3
 ├── .gitignore
 └── README.md                     # Project documentation (Architecture, Deployment steps)
+```
 
 # Data Flow
 
