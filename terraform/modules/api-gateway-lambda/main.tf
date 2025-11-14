@@ -65,6 +65,7 @@ resource "aws_lambda_function" "api_handler" {
         variables = {
             SOURCE_BUCKET_NAME      = var.source_bucket_name
             DESTINATION_BUCKET_NAME = var.destination_bucket_name
+            FRONTEND_DOMAIN         = var.frontend_domain
         }
     }
 
@@ -111,6 +112,7 @@ resource "aws_apigatewayv2_stage" "default_stage" {
     api_id      = aws_apigatewayv2_api.http_api.id
     name        = "$default"
     auto_deploy = true
+
 }
 
 resource "aws_lambda_permission" "api_gw_permission" {

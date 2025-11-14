@@ -22,3 +22,9 @@ variable "destination_bucket_arn" {
     description = "The ARN of the destination S3 bucket"
     type        = string
 }
+
+variable "frontend_domain" {
+    description = "The domain name of the frontend (CloudFront) to allow for CORS"
+    type        = string
+    default     = "*"
+}

@@ -7,8 +7,3 @@ variable "aws_region" {
     description = "The AWS region where resources will be created"
     type        = string
 }
-
-variable "frontend_website_url" {
-    description = "The full URL of the S3 website (e.g., http://...amazonaws.com) for CORS"
-    type        = string
-}

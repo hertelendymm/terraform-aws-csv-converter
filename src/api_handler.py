@@ -3,14 +3,17 @@ import boto3
 import os
 import logging
 from botocore.exceptions import ClientError
+import boto3.session
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-s3_client = boto3.client('s3')
+# s3_client = boto3.client('s3')
+s3_client = boto3.client('s3', config=boto3.session.Config(s3={'addressing_style': 'path'}))
 
 SOURCE_BUCKET = os.environ.get('SOURCE_BUCKET_NAME')
 DEST_BUCKET = os.environ.get('DESTINATION_BUCKET_NAME')
+FRONTEND_DOMAIN = os.environ.get('FRONTEND_DOMAIN', '*')
 
 def lambda_handler(event, context):
     logger.info(f"Received event: {json.dumps(event)}")
@@ -18,7 +21,7 @@ def lambda_handler(event, context):
     route_key = event.get('routeKey')
     
     headers = {
-        "Access-Control-Allow-Origin": "*", 
+        "Access-Control-Allow-Origin": FRONTEND_DOMAIN, 
         "Access-Control-Allow-Methods": "GET,OPTIONS",
         "Access-Control-Allow-Headers": "Content-Type"
     }
@@ -44,7 +47,7 @@ def lambda_handler(event, context):
             presigned_url = s3_client.generate_presigned_url(
                 'put_object',
                 Params={'Bucket': SOURCE_BUCKET, 'Key': file_name, 'ContentType': 'text/csv'},
-                ExpiresIn=300  
+                ExpiresIn=300,  
             )
             return {
                 'statusCode': 200,

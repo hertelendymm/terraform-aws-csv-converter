@@ -103,7 +103,15 @@ resource "aws_s3_bucket_cors_configuration" "source_bucket_cors" {
     cors_rule {
         allowed_headers = ["*"]
         allowed_methods = ["PUT", "POST", "HEAD"]
-        allowed_origins = ["*"] 
+        # allowed_origins = ["*"] 
+        # allowed_origins = [
+            # var.frontend_website_url, 
+            # replace(var.frontend_website_url, "http://", "https://"),
+            # "https://${aws_s3_bucket.source_bucket.id}.s3.${var.aws_region}.amazonaws.com"
+        # ]
+        allowed_origins = [var.frontend_website_url]
+        # allowed_origins = [var.frontend_website_url]
+        # allowed_origins = ["http://${var.frontend_website_url}"]
     }
 }
 
@@ -113,6 +121,14 @@ resource "aws_s3_bucket_cors_configuration" "destination_bucket_cors" {
     cors_rule {
         allowed_headers = ["*"]
         allowed_methods = ["GET", "HEAD"]
-        allowed_origins = ["*"] 
+        # allowed_origins = ["*"] 
+        # allowed_origins = [
+        #     var.frontend_website_url,
+        #     replace(var.frontend_website_url, "http://", "https://"),
+        #     "https://${aws_s3_bucket.destination_bucket.id}.s3.${var.aws_region}.amazonaws.com"
+        # ]
+        allowed_origins = [var.frontend_website_url]
+        # allowed_origins = ["http://${var.frontend_website_url}"]
+    
     }
 }
