@@ -8,6 +8,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:web/web.dart' as web;
 import 'dart:js_interop';
+import 'package:file_picker/file_picker.dart';
 
 const String apiEndpointUrl = String.fromEnvironment('API_ENDPOINT_URL');
 
@@ -329,6 +330,26 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Future<void> _handleUploadCsv() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['csv'],
+      allowMultiple: false,
+      withData: true, 
+    );
+
+    if (result != null && result.files.isNotEmpty) {
+      final platformFile = result.files.first;
+
+      if (platformFile.bytes != null) {
+        setState(() {
+          _selectedFileName = platformFile.name;
+          _selectedFileBytes = platformFile.bytes;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -337,12 +358,12 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('hertelendymm'),
         backgroundColor: Color(0xff101922),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.light_mode),
-            onPressed: () {
-              /// TODO: I could add light/dark mode togle later
-            },
-          ),
+          // IconButton(
+          //   icon: const Icon(Icons.light_mode),
+          //   onPressed: () {
+          //     /// TODO: I could add light/dark mode togle later
+          //   },
+          // ),
         ],
       ),
       body: Center(
@@ -350,7 +371,12 @@ class _HomeScreenState extends State<HomeScreen> {
           constraints: const BoxConstraints(maxWidth: 600),
           child: ListView(
             padding: const EdgeInsets.all(20.0),
-            children: [
+            children: [const Text(
+                'CSV to JSON Convert',
+                style: TextStyle(fontSize: 42, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 30),
               const Text(
                 'A simple and free tool to convert your CSV data into JSON format.',
                 style: TextStyle(fontSize: 16),
@@ -415,26 +441,27 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             const SizedBox(height: 10),
-                            ElevatedButton(
-                              onPressed: () {
-                                /// TODO: I should add a file picker later OR remove/hide the button
-                              },
-                              style: ElevatedButton.styleFrom(
-                                elevation: 0.0,
-                                shadowColor: Colors.transparent,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                backgroundColor: Color(0xff233648),
-                              ),
-                              child: Text(
-                                'Upload CSV',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
+                            // ElevatedButton(
+                            //   onPressed:  _handleUploadCsv,
+                            //   // () {
+                            //   ///   TODO: I should add a file picker later OR remove/hide the button
+                            //   // },
+                            //   style: ElevatedButton.styleFrom(
+                            //     elevation: 0.0,
+                            //     shadowColor: Colors.transparent,
+                            //     shape: RoundedRectangleBorder(
+                            //       borderRadius: BorderRadius.circular(8.0),
+                            //     ),
+                            //     backgroundColor: Color(0xff233648),
+                            //   ),
+                            //   child: Text(
+                            //     'Upload CSV',
+                            //     style: TextStyle(
+                            //       color: Colors.white,
+                            //       fontWeight: FontWeight.bold,
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),
@@ -472,11 +499,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 maxLines: 10,
                 readOnly: true,
                 decoration: InputDecoration(
-                  labelStyle: TextStyle(fontSize: 2, color: Colors.red),
+                  // labelStyle: TextStyle(fontSize: 2, color: Colors.red),
                   border: const OutlineInputBorder(),
                   hintText: 'Your JSON output will appear here...',
-                  suffixIcon: Row(
+                  suffixIcon: Column(
                     mainAxisSize: MainAxisSize.min,
+                    // crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       IconButton(
                         icon: const Icon(Icons.download),
@@ -495,7 +523,8 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 40),
 
               Text(
-                'File Listings',
+                // 'File Listings',
+                'History',
                 style: Theme.of(
                   context,
                 ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
