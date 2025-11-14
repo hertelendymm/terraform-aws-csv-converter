@@ -1,27 +1,87 @@
-# Automated CSV to JSON Converter
-*This capstone project is a fully automated, serverless, event-driven data processing pipeline on AWS. The entire cloud infrastructure is defined as code using Terraform, making the system reproducible and deployment process is fully automated through a CI/CD pipeline with GitHub Actions.*
+## Serverless CSV to JSON Converter
 
-**Concept**: Automatically convert csv files to json format upon upload.
+This project implements a fully automated, serverless, event-driven data processing pipeline on AWS. The entire cloud infrastructure is defined as code using Terraform, making the system reproducible and scalable.
 
-**Why it's a good project**: It demonstrates a powerful, event-driven architecture. Using Terraform elevates the project by making the entire setup version-controlled and fully automated, which are core concepts in modern DevOps and cloud engineering.
+The application converts a CSV file into JSON format instantly upon receiving the user's upload. The frontend provides a clean, drag-and-drop interface and manages the secure transfer and retrieval of data.
 
-➡️ **Live Demo Video Here** ⬅️
-(max. 15 sec)
+Live Demo Here: [link](http://csv2json-hosting-ax4zfwlp.s3-website.eu-central-1.amazonaws.com/).
 
-## How it Works:
-- **Terraform** is used to provision two S3 buckets: csv-uploads and json-processed.
-- The Terraform configuration also sets up an **S3 Event Notification** on the csv-uploads bucket.
-- When a user uploads a csv file to that bucket, the event automatically triggers an **AWS Lambda function** (managed also by Terraform).
-- The Lambda code reads the csv file, converts its content to json, and saves the new json file in the json-processed bucket.
+## Architectural Overview
 
-## Technology Stack:
-- **Cloud Provider**: AWS (Amazon Web Services)
-- **Infrastructure as Code (IaC)**: Terraform
-- **CI/CD**: GitHub Actions
-- **Programming Language**: Python 3.9
-- **Core AWS Services**:
-    - AWS Lambda (Serverless Compute)
-    - Amazon S3 Object Storage (with event triggers)
-    - ~API Gateway (for the Live Demo)~ Maybe later with an extra step: Add token authorization to the API Gateway.
-    - AWS IAM (Identity and Access Management)
-    - Amazon CloudWatch (Logging and Monitoring)
+The application is built on a decoupled, three-tier serverless architecture on AWS, ensuring high availability, scalability, and security.
+
+# Project File Structure
+.
+├── .github/
+│   └── workflows/
+│       └── deploy.yml            # GitHub Actions CI/CD pipeline
+├── frontend/                     # Flutter Web Application Root
+│   ├── lib/
+│   │   └── main.dart             # Main Flutter UI and logic (clean, drag-and-drop)
+│   ├── build/                    # (Generated directory after 'flutter build web')
+│   ├── pubspec.yaml
+│   └── ... (other Flutter files)
+├── src/                          # Backend Lambda Source Code (Zipped by Terraform)
+│   ├── api_handler.py            # API Gateway handler (Generates pre-signed URLs, lists files)
+│   └── lambda_function.py        # S3 event trigger handler (CSV to JSON conversion logic)
+├── terraform/                    # Infrastructure as Code (IaC) Root
+│   ├── foundation/               # Stage 1: Creates S3 backend and DynamoDB lock table
+│   │   ├── main.tf
+│   │   ├── outputs.tf
+│   │   └── variables.tf
+│   ├── modules/
+│   │   ├── api-gateway-lambda/   # Module for HTTP API Gateway and its handler Lambda
+│   │   │   ├── main.tf
+│   │   │   └── variables.tf
+│   │   ├── frontend-hosting/     # Module for S3 website hosting bucket and public policy
+│   │   │   ├── main.tf
+│   │   │   └── outputs.tf
+│   │   └── s3-lambda-pipeline/   # Module for Source/Destination S3 buckets, Lambda converter, and S3 event config
+│   │       ├── main.tf
+│   │       └── variables.tf
+│   ├── main.tf                   # Root configuration (calls all modules and links outputs)
+│   ├── variables.tf              # Global variables (project_name, aws_region)
+│   ├── outputs.tf                # Outputs (website_url, api_endpoint_url, bucket names)
+│   ├── init.sh                   # Script to initialize Terraform with remote backend config
+│   └── deploy_frontend.sh        # Script to build Flutter and sync assets to S3
+├── .gitignore
+└── README.md                     # Project documentation (Architecture, Deployment steps)
+
+# Data Flow
+
+1. Upload: User drops a CSV file onto the Flutter frontend.
+2. Auth: The frontend requests a pre-signed PUT URL from the API Gateway.
+3. Data Transfer: The frontend uses the pre-signed URL to upload the CSV file directly to the Source S3 Bucket.
+4. Conversion: The file creation triggers the csv_converter Lambda.
+5. Storage: The Lambda downloads the CSV, converts the data to JSON, and uploads the resulting JSON file to the Destination S3 Bucket.
+6. Retrieval: The frontend polls the API for the new JSON file, gets a pre-signed GET URL, and downloads the final JSON data for display.
+
+## Technology Stack
+
+# DevOps & Infrastructure
+- Cloud Provider: AWS (Amazon Web Services)
+- Infrastructure as Code (IaC): Terraform (Modules are used for clean separation of concerns: s3-lambda-pipeline, api-gateway-lambda, frontend-hosting).
+- CI/CD: Custom Bash/AWS CLI script for continuous deployment and synchronizing frontend assets.
+- Remote State Management: Terraform state is securely stored and locked using an S3 bucket and DynamoDB table.
+
+# Backend & Core Services
+- Backend Code: Python 3.9 (Boto3, CSV, JSON standard libraries).
+- Core AWS Services:
+- AWS Lambda: Serverless compute for API handling and CSV conversion.
+- Amazon S3: Used for source, destination, and static website hosting (with secure CORS policies).
+- Amazon API Gateway (HTTP): Public endpoint for managing file transfers and listings.
+- AWS IAM: Granular roles and policies for Lambda execution and S3 access.
+
+# Frontend
+- Framework: Flutter (for a consistent web UI).
+- Interaction: Drag-and-drop file input (desktop_drop).
+
+## Deployment and Usage
+
+# Prerequisites
+
+- AWS Account configured with appropriate credentials (assumed to be available via environment variables or CLI).
+- Terraform CLI (v1.13.1+).
+- Flutter SDK and environment setup.
+- AWS CLI (v2).
+
