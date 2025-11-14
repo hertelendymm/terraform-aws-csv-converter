@@ -1,4 +1,4 @@
-## Serverless CSV to JSON Converter
+# Serverless CSV to JSON Converter
 
 This project implements a fully automated, serverless, event-driven data processing pipeline on AWS. The entire cloud infrastructure is defined as code using Terraform, making the system reproducible and scalable.
 
@@ -6,11 +6,9 @@ The application converts a CSV file into JSON format instantly upon receiving th
 
 Live Demo Here: [link](http://csv2json-hosting-ax4zfwlp.s3-website.eu-central-1.amazonaws.com/).
 
-## Architectural Overview
+# Architectural Overview
 
-The application is built on a decoupled, three-tier serverless architecture on AWS, ensuring high availability, scalability, and security.
-
-# Project File Structure
+## Project File Structure
 ```
 .
 ├── .github/
@@ -49,7 +47,7 @@ The application is built on a decoupled, three-tier serverless architecture on A
 └── README.md                     # Project documentation (Architecture, Deployment steps)
 ```
 
-# Data Flow
+## Data Flow
 
 1. Upload: User drops a CSV file onto the Flutter frontend.
 2. Auth: The frontend requests a pre-signed PUT URL from the API Gateway.
@@ -58,29 +56,29 @@ The application is built on a decoupled, three-tier serverless architecture on A
 5. Storage: The Lambda downloads the CSV, converts the data to JSON, and uploads the resulting JSON file to the Destination S3 Bucket.
 6. Retrieval: The frontend polls the API for the new JSON file, gets a pre-signed GET URL, and downloads the final JSON data for display.
 
-## Technology Stack
+# Technology Stack
 
-# DevOps & Infrastructure
+## DevOps & Infrastructure
 - Cloud Provider: AWS (Amazon Web Services)
 - Infrastructure as Code (IaC): Terraform (Modules are used for clean separation of concerns: s3-lambda-pipeline, api-gateway-lambda, frontend-hosting).
 - CI/CD: Custom Bash/AWS CLI script for continuous deployment and synchronizing frontend assets.
 - Remote State Management: Terraform state is securely stored and locked using an S3 bucket and DynamoDB table.
 
-# Backend & Core Services
+## Backend & Core Services
 - Backend Code: Python 3.9 (Boto3, CSV, JSON standard libraries).
 - Core AWS Services:
-- AWS Lambda: Serverless compute for API handling and CSV conversion.
-- Amazon S3: Used for source, destination, and static website hosting (with secure CORS policies).
-- Amazon API Gateway (HTTP): Public endpoint for managing file transfers and listings.
-- AWS IAM: Granular roles and policies for Lambda execution and S3 access.
+    - AWS Lambda: Serverless compute for API handling and CSV conversion.
+    - Amazon S3: Used for source, destination, and static website hosting (with secure CORS policies).
+    - Amazon API Gateway (HTTP): Public endpoint for managing file transfers and listings.
+    - AWS IAM: Granular roles and policies for Lambda execution and S3 access.
 
-# Frontend
+## Frontend
 - Framework: Flutter (for a consistent web UI).
 - Interaction: Drag-and-drop file input (desktop_drop).
 
-## Deployment and Usage
+# Deployment and Usage
 
-# Prerequisites
+## Prerequisites
 
 - AWS Account configured with appropriate credentials (assumed to be available via environment variables or CLI).
 - Terraform CLI (v1.13.1+).
