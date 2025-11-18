@@ -358,12 +358,12 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('hertelendymm'),
         backgroundColor: Color(0xff101922),
         actions: [
-          // IconButton(
-          //   icon: const Icon(Icons.light_mode),
-          //   onPressed: () {
-          //     /// TODO: I could add light/dark mode togle later
-          //   },
-          // ),
+          IconButton(
+            icon: const Icon(Icons.light_mode),
+            onPressed: () {
+              /// TODO: I could add light/dark mode togle later
+            },
+          ),
         ],
       ),
       body: Center(
@@ -371,7 +371,7 @@ class _HomeScreenState extends State<HomeScreen> {
           constraints: const BoxConstraints(maxWidth: 600),
           child: ListView(
             padding: const EdgeInsets.all(20.0),
-            children: [const Text(
+            children: [ Text(
                 'CSV to JSON Convert',
                 style: TextStyle(fontSize: 42, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
@@ -441,27 +441,27 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             const SizedBox(height: 10),
-                            // ElevatedButton(
-                            //   onPressed:  _handleUploadCsv,
-                            //   // () {
-                            //   ///   TODO: I should add a file picker later OR remove/hide the button
-                            //   // },
-                            //   style: ElevatedButton.styleFrom(
-                            //     elevation: 0.0,
-                            //     shadowColor: Colors.transparent,
-                            //     shape: RoundedRectangleBorder(
-                            //       borderRadius: BorderRadius.circular(8.0),
-                            //     ),
-                            //     backgroundColor: Color(0xff233648),
-                            //   ),
-                            //   child: Text(
-                            //     'Upload CSV',
-                            //     style: TextStyle(
-                            //       color: Colors.white,
-                            //       fontWeight: FontWeight.bold,
-                            //     ),
-                            //   ),
-                            // ),
+                            ElevatedButton(
+                              onPressed:  _handleUploadCsv,
+                              // () {
+                              ///   TODO: I should add a file picker later OR remove/hide the button
+                              // },
+                              style: ElevatedButton.styleFrom(
+                                elevation: 0.0,
+                                shadowColor: Colors.transparent,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                backgroundColor: Color(0xff233648),
+                              ),
+                              child: Text(
+                                'Upload CSV',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -479,7 +479,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
+                    
                   ),
+                  backgroundColor: Colors.green.shade800,
+                  disabledBackgroundColor: Color(0xff233648),
+                  // disabledBackgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                  // disabledForegroundColor: Colors.blue,
                 ),
 
                 onPressed: (_isLoading || _selectedFileBytes == null)

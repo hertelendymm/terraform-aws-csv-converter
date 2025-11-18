@@ -18,26 +18,33 @@ def lambda_handler(event, context):
     logger.info("## EVENT RECEIVED")
     logger.info(json.dumps(event))
 
+    source_bucket_name = None
+    source_object_key = None
+
     try:
         source_bucket_name = event['Records'][0]['s3']['bucket']['name']
         source_object_key = event['Records'][0]['s3']['object']['key']
+        logger.info(f"Processing file: s3://{source_bucket_name}/{source_object_key}")
     except KeyError as e:
-        logger.error(f"Error extracting bucket or key from event: {e}")
+        logger.error(f"FATAL ERROR: Invalid S3 event structure. Missing key: {e}")
         return {'statusCode': 400, 'body': json.dumps('Invalid S3 event format.')}
 
     destination_bucket_name = os.environ.get('DESTINATION_BUCKET_NAME')
     if not destination_bucket_name:
-        logger.error("Error: DESTINATION_BUCKET_NAME environment variable not set.")
-        return {'statusCode': 500, 'body': json.dumps('Server-side configuration error.')}
+        logger.critical("Error: DESTINATION_BUCKET_NAME environment variable not set. Check Lambda configuration.")
+        return {'statusCode': 500, 'body': json.dumps('Server-side configuration error: missing destination bucket.')}
 
     local_file_path = f'/tmp/{os.path.basename(source_object_key)}'
+    s3 = boto3.client('s3')
 
     try:
-        s3 = boto3.client('s3')
-        logger.info(f"Downloading s3://{source_bucket_name}/{source_object_key} to {local_file_path}")
+        # s3 = boto3.client('s3')
+        # logger.info(f"Downloading s3://{source_bucket_name}/{source_object_key} to {local_file_path}")
+        logger.info(f"Downloading file to {local_file_path}")
         s3.download_file(source_bucket_name, source_object_key, local_file_path)
 
         list_of_rows: List[Dict[str, str]] = []
+
         with open(local_file_path, 'r', encoding='utf-8-sig') as csv_file:
             csv_reader = csv.DictReader(csv_file)
             for row in csv_reader:
@@ -46,17 +53,18 @@ def lambda_handler(event, context):
         
         destination_object_key = f"{os.path.splitext(source_object_key)[0]}.json"
         
-        logger.info(f"Uploading {destination_object_key} to s3://{destination_bucket_name}/")
+        logger.info(f"Starting upload of {destination_object_key} to s3://{destination_bucket_name}/")
         s3.put_object(
             Bucket=destination_bucket_name,
             Key=destination_object_key,
             Body=json.dumps(list_of_rows, indent=4),
             ContentType='application/json'
         )
+        logger.info(f"Successfully uploaded {destination_object_key}.")
 
     except Exception as e:
-        logger.error(f"An error occurred: {e}")
-        return {'statusCode': 500, 'body': json.dumps(f'Error processing file: {e}')}
+        logger.error(f"FAILED PROCESSING {source_object_key}: {e}", exc_info=True)
+        return {'statusCode': 500, 'body': json.dumps(f'Error processing file {source_object_key}: {e}')}
 
     logger.info("## SUCCESS")
     return {
