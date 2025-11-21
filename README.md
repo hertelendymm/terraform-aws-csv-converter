@@ -4,7 +4,7 @@ This project implements a fully automated, serverless, event-driven data process
 
 The application converts a CSV file into JSON format instantly upon receiving the user's upload. The frontend provides a clean, drag-and-drop interface and manages the secure transfer and retrieval of data.
 
-Live Demo Here: [link](http://csv2json-hosting-ax4zfwlp.s3-website.eu-central-1.amazonaws.com/).
+Live Demo Here: [link](http://csv2json-hosting-bf620hus.s3-website.eu-central-1.amazonaws.com/).
 
 # Architectural Overview
 
